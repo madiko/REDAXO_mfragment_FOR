@@ -178,15 +178,24 @@ class Menu extends AbstractComponent
         // Externe URL prüfen
         $isExternal = $this->isExternalUrl($url);
         
-        // CSS-Klassen
-        $linkClass = $this->config['class']['link'] ?? 'nav-link';
-        $itemClass = $this->config['class']['item'] ?? 'nav-item';
-        $textClass = $this->config['class']['text'] ?? 'nav-link-title';
+        // CSS-Klassen (item-spezifisch überschreibt global)
+        $linkClass = $item['class']['link'] ?? $this->config['class']['link'] ?? 'nav-link';
+        $itemClass = $item['class']['item'] ?? $this->config['class']['item'] ?? 'nav-item';
+        $textClass = $item['class']['text'] ?? $this->config['class']['text'] ?? 'nav-link-title';
 
-        // Attribute
-        $linkAttributes = $item['attributes']['link'] ?? [];
-        $itemAttributes = $item['attributes']['item'] ?? [];
-        $textAttributes = $item['attributes']['text'] ?? [];
+        // Attribute (item-spezifisch und global mergen)
+        $linkAttributes = array_merge(
+            $this->config['attributes']['link'] ?? [],
+            $item['attributes']['link'] ?? []
+        );
+        $itemAttributes = array_merge(
+            $this->config['attributes']['item'] ?? [],
+            $item['attributes']['item'] ?? []
+        );
+        $textAttributes = array_merge(
+            $this->config['attributes']['text'] ?? [],
+            $item['attributes']['text'] ?? []
+        );
 
         // Externe Links und Redirects
         if ($isExternal || $isYrewriteRedirect) {
